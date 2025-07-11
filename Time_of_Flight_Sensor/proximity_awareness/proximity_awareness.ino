@@ -47,14 +47,16 @@ void setup() {
   display.init(170, 320);  //Intializing and configuring the sensor using the object(tft).
   display.setRotation(3);  
 
-  sensor.startContinuous();
-  // checking sensor working or not
+
+  Wire.begin();
+
   sensor.setTimeout(500);
   if (!sensor.init())
   {
     Serial.println("Failed to detect and initialize sensor!");
     while (1) {}
   }
+  sensor.startContinuous();
   
   // Show Edge Impulse model input size and label count
   Serial.print("Features: ");
@@ -111,18 +113,18 @@ void loop() {
         // You could send this buffer over WiFi or log it if needed
       }
 
-    String newLabel = "STATIONED";
-    float highestProbability = 0.0;
+        String newLabel = "STATIONED";
+        float highestProbability = 0.0;
 
-    // Analyze the inference results to find the most probable label
-    for (uint16_t i = 0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
-        float conf = result.classification[i].value;
+        for (uint16_t i = 0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
+            float conf = result.classification[i].value;
             if (conf > 0.6) {
                 newLabel = String(result.classification[i].label);
                 highestProbability = conf;
                 break;  
             }
-    }
+        }
+
 
     // Check if the new label is the same as the last label
     if (newLabel == lastLabel) {
@@ -133,12 +135,14 @@ void loop() {
         lastLabel = newLabel;
         labelStartTime = millis();
     }
-    String label = newLabel;
 
-
-    if (distanceCm < 5) {
-        label = "TOO CLOSE";
+    if (distance < 3) {
+      newLabel = "TOO CLOSE!";
     }
+
+    // Display the current label on the OLED if it has been consistent for more than 2 seconds
+    
+    String label = newLabel;
     label.toUpperCase();    // Display the current label on the OLED if it has been consistent for more than 2 seconds
     display.fillScreen(ST77XX_BLACK); 
 
@@ -159,7 +163,7 @@ void loop() {
     Serial.print(" | Most probable: ");
     Serial.println(newLabel);
 
-      feature_ix = 0; // Reset the buffer index for the next cycle
+      feature_ix = 0;  // Reset the buffer index for the next cycle 
     }
   }
 }

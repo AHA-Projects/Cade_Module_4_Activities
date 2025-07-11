@@ -57,8 +57,8 @@ void setup() {
     tft.fillScreen(BLACK);  // Make the whole screen black.
 
     // --- Initialize the BME280 Sensor ---
-    unsigned status;
-    status = bme.begin(); // Try to start the sensor
+    bool status;
+    status = bme.begin(0x76); // Try to start the sensor
     
     if (!status) {
         Serial.println(F("Could not find a valid BME280 sensor, check wiring, address, sensor ID!"));
