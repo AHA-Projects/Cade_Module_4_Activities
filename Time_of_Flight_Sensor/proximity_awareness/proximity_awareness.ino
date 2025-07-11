@@ -47,7 +47,7 @@ void setup() {
   display.init(170, 320);  //Intializing and configuring the sensor using the object(tft).
   display.setRotation(3);  
 
-
+  sensor.startContinuous();
   // checking sensor working or not
   sensor.setTimeout(500);
   if (!sensor.init())
@@ -61,7 +61,6 @@ void setup() {
   Serial.println(EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE);
   Serial.print("Label count: ");
   Serial.println(EI_CLASSIFIER_LABEL_COUNT);
-  sensor.startContinuous();
 }
 
 // === Main Loop: Runs Continuously ===
