@@ -9,8 +9,9 @@
 #include <Adafruit_Sensor.h>                  // Unified sensor interface used by Adafruit libraries
 #include <Wire.h>                             // Library for I2C communication
 #include <WiFi.h>                             // WiFi library for network capability (not used in this code)
-#include <GyverOLED.h>
 #include <Adafruit_BME280.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7789.h> 
 
 
 #define SEALEVELPRESSURE_HPA (1013.25)
@@ -18,7 +19,11 @@
 
 // === Initialize Sensor and Buffer Variables ===
 Adafruit_BME280 bme; // I2C
-GyverOLED<SSH1106_128x64> display;
+#define TFT_CS   33  // Chip Select control pin
+#define TFT_DC    25  // Data/Command select pin
+#define TFT_RST   26  // Reset pin (or connect to RST, see below)
+//GyverOLED<SSH1106_128x64> display;
+Adafruit_ST7789 display = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 #define FREQUENCY_HZ 2                          // Sampling rate: 2 times per second
 #define INTERVAL_MS (1000 / (FREQUENCY_HZ + 1))  // Time between samples in milliseconds
@@ -34,9 +39,10 @@ const unsigned long thresholdTime = 500;
 
 // === Setup Function: Runs Once ===
 void setup() {
-  Serial.begin(115200);  // Initialize serial communication at 115200 baud
+    Serial.begin(115200);  // Initialize serial communication at 115200 baud
 
-    display.init();
+    display.init(170, 320);
+    display.setRotation(3);
     bool status;
     
     // default settings with specific I2C address
@@ -130,16 +136,18 @@ void loop() {
     }
     String label = newLabel;
     label.toUpperCase();    // Display the current label on the OLED if it has been consistent for more than 2 seconds
-    display.clear();
-    display.setScale(3);
-    display.setCursor(0, 0);
-    display.println(label);
-    display.setCursor(0, 4);
-    display.setScale(1);
-    display.print("Confidence : ");
-    display.print((highestProbability)*100);
-    display.println("%");
-    display.update();
+    display.fillScreen(ST77XX_BLACK); 
+
+    display.setCursor(0, 0);       
+    display.setTextSize(4);        
+    display.setTextColor(ST77XX_WHITE); 
+    display.println(label);       
+
+    display.setCursor(0, 50);      
+    display.setTextSize(3);        
+    display.print("Confidence:"); 
+    display.print((highestProbability) * 100); 
+    display.println("%");   
 
     // Debug: Print the current label and the status
     Serial.print("Current Label: ");

@@ -11,13 +11,15 @@
 #include <Adafruit_Sensor.h>                  // Unified sensor interface used by Adafruit libraries
 #include <Wire.h>                             // Library for I2C communication
 #include <WiFi.h>                             // WiFi library for network capability (not used in this code)
-#include <GyverOLED.h>
+// #include <GyverOLED.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7789.h> 
+
 
 // === Define Sampling Parameters ===
 #define FREQUENCY_HZ 60                          // Sampling rate: 60 times per second
 #define INTERVAL_MS (1000 / (FREQUENCY_HZ + 1))  // Time between samples in milliseconds
+
 
 // === Initialize Sensor and Buffer Variables ===
 Adafruit_MPU6050 mpu;          
