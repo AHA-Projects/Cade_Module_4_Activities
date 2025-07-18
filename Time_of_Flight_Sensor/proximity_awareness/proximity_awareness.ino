@@ -138,7 +138,7 @@ void loop() {
         labelStartTime = millis();
     }
 
-    if (distance < 3) {
+    if (distanceCm < 3) {
       newLabel = "TOO CLOSE!";
     }
 
