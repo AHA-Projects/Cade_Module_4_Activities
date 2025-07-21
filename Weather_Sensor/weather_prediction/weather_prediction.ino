@@ -143,7 +143,7 @@ void loop() {
     display.setTextColor(ST77XX_WHITE); 
     display.println(label);       
 
-    display.setCursor(0, 50);      
+    display.setCursor(0, 65);      
     display.setTextSize(3);        
     display.print("Confidence:"); 
     display.print((highestProbability) * 100); 
